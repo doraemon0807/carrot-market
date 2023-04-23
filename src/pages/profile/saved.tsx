@@ -1,10 +1,10 @@
-import type { NextPage } from "next";
-import Layout from "@/components/layout";
 import Item from "@/components/item";
+import Layout from "@/components/layout";
+import type { NextPage } from "next";
 
-const Bought: NextPage = () => {
+const Loved: NextPage = () => {
   return (
-    <Layout title="Bought Items" hasTabBar canGoBack>
+    <Layout title="Saved Items" hasTabBar canGoBack>
       <div className="flex flex-col space-y-5 py-5">
         {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
           <Item
@@ -22,4 +22,4 @@ const Bought: NextPage = () => {
   );
 };
 
-export default Bought;
+export default Loved;
