@@ -24,13 +24,9 @@ const EditProfile: NextPage = () => {
           </label>
         </div>
 
-        <div className="space-y-1">
-          <Input name="email" kind="text" label="Email Address" />
-        </div>
+        <Input name="email" kind="text" label="Email Address" />
 
-        <div className="space-y-1">
-          <Input name="phone" kind="phone" label="Phone Number" />
-        </div>
+        <Input name="phone" kind="phone" label="Phone Number" />
 
         <Button text="Update Profile" />
       </div>

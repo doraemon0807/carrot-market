@@ -7,7 +7,7 @@ import type { NextPage } from "next";
 const Upload: NextPage = () => {
   return (
     <Layout title="Upload" canGoBack>
-      <div className="space-y-5 px-4">
+      <div className="space-y-4 px-4">
         <div>
           <label className="flex h-48 w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-300 text-gray-600 hover:border-orange-500 hover:text-orange-500">
             <svg
@@ -28,9 +28,11 @@ const Upload: NextPage = () => {
           </label>
         </div>
 
-        <Input name="name" label="Price" kind="text" />
+        <Input name="name" label="Name" kind="text" required />
 
-        <Input name="price" label="Price" kind="price" />
+        <Input name="brand" label="Brand" kind="text" />
+
+        <Input name="price" label="Price" kind="price" required />
 
         <TextArea label="Description" name="description" />
 

@@ -11,7 +11,7 @@ const Home: NextPage = () => {
           <Item
             key={i}
             title="iPhone 60"
-            subtitle="Black"
+            brand="Apple"
             id={i}
             price={400}
             comments={12}

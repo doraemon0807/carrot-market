@@ -2,7 +2,7 @@ import Link from "next/link";
 
 interface ItemProps {
   title: string;
-  subtitle?: string;
+  brand: string;
   id: number;
   price: number;
   comments: number;
@@ -11,7 +11,7 @@ interface ItemProps {
 
 export default function Item({
   title,
-  subtitle,
+  brand,
   id,
   price,
   comments = 0,
@@ -25,9 +25,11 @@ export default function Item({
       >
         <div className="flex space-x-4">
           <div className="aspect-square h-20 w-20 rounded-lg bg-gray-400" />
-          <div className="flex flex-col pt-2">
+          <div className="flex flex-col pt-1">
             <h3 className="text-sm font-medium text-gray-900">{title}</h3>
-            <span className="text-xs text-gray-500">{subtitle}</span>
+            <div className="h-6 min-h-[24px]">
+              <span className="text-xs text-gray-500">{brand}</span>
+            </div>
             <span className="mt-1 text-lg font-medium text-gray-900">
               ${price}
             </span>

@@ -42,14 +42,14 @@ export default function Enter() {
         </div>
         <form className="mt-8 flex flex-col">
           {method === "email" && (
-            <div>
-              <Input name="email" label="Email Address" kind="text" />
+            <div className="space-y-3">
+              <Input required name="email" label="Email Address" kind="text" />
               <Button text="Get Login Link" />
             </div>
           )}
           {method === "phone" && (
-            <div>
-              <Input name="phone" label="Phone Number" kind="phone" />
+            <div className="space-y-3">
+              <Input required name="phone" label="Phone Number" kind="phone" />
               <Button text="Get One-time Password" />
             </div>
           )}

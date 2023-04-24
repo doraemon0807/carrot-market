@@ -23,7 +23,6 @@ export default function Input({
             {...rest}
             className="w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500"
             type={kind}
-            required
           />
         ) : kind === "phone" ? (
           <div className="flex rounded-md shadow-sm">
@@ -34,7 +33,6 @@ export default function Input({
               id={name}
               {...rest}
               className="w-full appearance-none rounded-r-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
-              required
             />
           </div>
         ) : kind === "price" ? (
