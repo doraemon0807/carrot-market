@@ -1,13 +1,35 @@
 import { useState } from "react";
-import cls from "@/libs/utils";
+import cls from "@/libs/client/utils";
 import Button from "@/components/button";
 import Input from "@/components/input";
+import { useForm } from "react-hook-form";
+import useMutation from "@/libs/client/useMutation";
+
+interface EnterForm {
+  email?: string;
+  phone?: string;
+}
 
 export default function Enter() {
+  const [enter, { loading, data, error }] = useMutation("/api/users/enter");
+  const { register, reset, handleSubmit } = useForm<EnterForm>();
   const [method, setMethod] = useState<"email" | "phone">("email");
 
-  const onEmailClick = () => setMethod("email");
-  const onPhoneClick = () => setMethod("phone");
+  const [submitting, setSubmitting] = useState(false);
+
+  const onEmailClick = () => {
+    setMethod("email");
+    reset();
+  };
+
+  const onPhoneClick = () => {
+    setMethod("phone");
+    reset();
+  };
+
+  const onValid = (validForm: EnterForm) => {
+    enter(validForm);
+  };
 
   return (
     <div className="mt-16 px-4">
@@ -40,17 +62,35 @@ export default function Enter() {
             </button>
           </div>
         </div>
-        <form className="mt-8 flex flex-col">
+        <form onSubmit={handleSubmit(onValid)} className="mt-8 flex flex-col">
           {method === "email" && (
             <div className="space-y-3">
-              <Input required name="email" label="Email Address" kind="text" />
-              <Button text="Get Login Link" />
+              <Input
+                register={register("email", {
+                  required: "Please write your email address.",
+                })}
+                name="email"
+                label="Email Address"
+                kind="text"
+                required
+              />
+              <Button text={submitting ? "Loading..." : "Get Login Link"} />
             </div>
           )}
           {method === "phone" && (
             <div className="space-y-3">
-              <Input required name="phone" label="Phone Number" kind="phone" />
-              <Button text="Get One-time Password" />
+              <Input
+                register={register("phone", {
+                  required: "Please write your phone number.",
+                })}
+                name="phone"
+                label="Phone Number"
+                kind="phone"
+                required
+              />
+              <Button
+                text={submitting ? "Loading..." : "Get One-time Password"}
+              />
             </div>
           )}
         </form>

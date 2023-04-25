@@ -1,7 +1,11 @@
+import type { UseFormRegisterReturn } from "react-hook-form";
+
 interface InputProps {
   name: string;
   label: string;
   kind?: "text" | "phone" | "price";
+  register: UseFormRegisterReturn;
+  required?: boolean;
   [key: string]: any;
 }
 
@@ -9,6 +13,8 @@ export default function Input({
   name,
   label,
   kind = "text",
+  register,
+  required,
   ...rest
 }: InputProps) {
   return (
@@ -20,9 +26,11 @@ export default function Input({
         {kind === "text" ? (
           <input
             id={name}
-            {...rest}
+            {...register}
             className="w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500"
             type={kind}
+            required={required}
+            {...rest}
           />
         ) : kind === "phone" ? (
           <div className="flex rounded-md shadow-sm">
@@ -31,8 +39,11 @@ export default function Input({
             </span>
             <input
               id={name}
-              {...rest}
+              {...register}
               className="w-full appearance-none rounded-r-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+              type={kind}
+              required={required}
+              {...rest}
             />
           </div>
         ) : kind === "price" ? (
@@ -45,8 +56,11 @@ export default function Input({
             <input
               className="w-full appearance-none rounded-md border border-gray-300 px-3 py-2 pl-7 placeholder-gray-400 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
               id={name}
-              {...rest}
+              {...register}
               placeholder="0.00"
+              type={kind}
+              required={required}
+              {...rest}
             />
             <div className="absolute right-0 flex items-center pr-3">
               <span className="pointer-events-none select-none text-sm text-gray-500">
