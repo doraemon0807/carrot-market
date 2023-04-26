@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emailjs/nodejs": "^2.2.0",
     "@prisma/client": "^4.13.0",
+    "@sendgrid/mail": "^7.7.0",
     "@tailwindcss/forms": "^0.5.3",
     "@types/node": "18.15.11",
     "@types/react": "18.0.37",
@@ -23,6 +25,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
     "tailwind-scrollbar-hide": "^1.1.7",
+    "twilio": "^4.10.0",
     "typescript": "5.0.4"
   },
   "devDependencies": {

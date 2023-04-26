@@ -25,7 +25,7 @@ export default function useMutation(url: string): UseMutationResult {
       },
       body: JSON.stringify(data),
     })
-      .then((response) => response.json().catch(() => {}))
+      .then((response) => response.json().catch((error) => {}))
       .then((data) => setState((prev) => ({ ...prev, data })))
       .catch((error) => setState((prev) => ({ ...prev, error })))
       .finally(() => setState((prev) => ({ ...prev, loading: false })));
@@ -39,8 +39,6 @@ export default function useMutation(url: string): UseMutationResult {
   //       .then((data) => setState((prev) => ({ ...prev, data, loading: false })))
   //       .catch((error) => setState((prev) => ({ ...prev, error })));
   //   }
-
-  console.log(state);
 
   return [mutation, { ...state }];
 }
