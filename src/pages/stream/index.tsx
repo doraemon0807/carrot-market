@@ -8,7 +8,7 @@ const Stream: NextPage = () => {
     <Layout title="Live Streams" hasTabBar>
       <div className="space-y-4 divide-y-2 pb-10 pt-5">
         {[1, 2, 3, 4, 5, 6].map((_, i) => (
-          <div className="px-4 pt-4">
+          <div key={i} className="px-4 pt-4">
             <Link href={`/stream/${i}`}>
               <div
                 key={i}

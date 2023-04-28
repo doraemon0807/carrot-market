@@ -3,6 +3,7 @@ import withHandler, { ResponseType } from "@/libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 import twilio from "twilio";
 import mail from "@emailjs/nodejs";
+import { withApiSession } from "@/libs/server/withSession";
 
 const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 
@@ -11,9 +12,15 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const { phone, email } = req.body;
-  const user = phone ? { phone: +phone } : email ? { email } : null;
+  const user = phone ? { phone } : email ? { email } : null;
   if (!user) return res.status(400).json({ ok: false });
   const payload = Math.floor(100000 + Math.random() * 900000) + "";
+
+  // const foundTokens = await client.token.findMany({
+  //   where:{
+  //     id:
+  //   }
+  // })
 
   const token = await client.token.create({
     data: {
@@ -31,6 +38,23 @@ async function handler(
       },
     },
   });
+
+  const foundToken = await client.token.count({
+    where: {
+      userId: token.userId,
+    },
+  });
+
+  if (foundToken > 1) {
+    await client.token.deleteMany({
+      where: {
+        userId: token.userId,
+        NOT: {
+          createdAt: token.createdAt,
+        },
+      },
+    });
+  }
 
   /*   //Check if user exists already
   if (email) {
@@ -81,27 +105,29 @@ async function handler(
   } */
 
   if (phone) {
-    const message = await twilioClient.messages.create({
-      messagingServiceSid: process.env.TWILIO_MSID,
-      to: process.env.PHONE_NUMBER!,
-      body: `Your login token is ${payload}.`,
-    });
-    console.log(message);
+    //Send token to phone number
+    // const message = await twilioClient.messages.create({
+    //   messagingServiceSid: process.env.TWILIO_MSID,
+    //   to: process.env.PHONE_NUMBER!,
+    //   body: `Your login token is ${payload}.`,
+    // });
+    // console.log(message);
   } else if (email) {
-    const email = await mail.send(
-      process.env.EMALIJS_SID!,
-      process.env.EMALIJS_TEMPID!,
-      {
-        to_name: req.body.email,
-        subject: "Carrot Market Verification Code",
-        html: `<strong>Your verification code is ${payload}.</strong>`,
-      },
-      {
-        publicKey: process.env.EMAILJS_PUBKEY!,
-        privateKey: process.env.EMALJS_PRIVATEKEY!,
-      }
-    );
-    console.log(email);
+    //Send token to email
+    // const email = await mail.send(
+    //   process.env.EMALIJS_SID!,
+    //   process.env.EMALIJS_TEMPID!,
+    //   {
+    //     to_name: req.body.email,
+    //     subject: "Carrot Market Verification Code",
+    //     html: `<strong>Your verification code is ${payload}.</strong>`,
+    //   },
+    //   {
+    //     publicKey: process.env.EMAILJS_PUBKEY!,
+    //     privateKey: process.env.EMALJS_PRIVATEKEY!,
+    //   }
+    // );
+    // console.log(email);
   }
 
   return res.json({
@@ -109,4 +135,10 @@ async function handler(
   });
 }
 
-export default withHandler("POST", handler);
+export default withApiSession(
+  withHandler({
+    method: "POST",
+    handler,
+    isPrivate: false,
+  })
+);
