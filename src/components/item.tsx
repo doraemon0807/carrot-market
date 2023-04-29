@@ -18,7 +18,7 @@ export default function Item({
   saves = 0,
 }: ItemProps) {
   return (
-    <Link href={`/items/${id}`}>
+    <Link href={`/products/${id}`}>
       <div
         key={id}
         className="flex cursor-pointer justify-between border-b px-4 pb-4"
