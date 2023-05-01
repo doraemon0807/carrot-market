@@ -8,13 +8,14 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const {
-    query: { id }, //id of product
+    query: { id }, //id of the post
     session: { user },
   } = req;
+
   const cleanId = Number(id);
 
-  //Check if product exists
-  const product = await client.product.findUnique({
+  //Check if post exists
+  const post = await client.post.findUnique({
     where: {
       id: cleanId,
     },
@@ -23,30 +24,34 @@ async function handler(
     },
   });
 
-  if (!product)
-    res.status(404).json({ ok: false, error: "The product doesn't exist." });
+  if (!post)
+    res.status(404).json({ ok: false, error: "The post doesn't exist." });
 
-  const alreadyExist = await client.favorite.findFirst({
+  const alreadyExists = await client.interest.findFirst({
     where: {
-      productId: cleanId,
       userId: user?.id,
+      postId: cleanId,
+    },
+    select: {
+      id: true,
     },
   });
-  if (alreadyExist) {
-    await client.favorite.delete({
+
+  if (alreadyExists) {
+    await client.interest.delete({
       where: {
-        id: alreadyExist.id,
+        id: alreadyExists.id,
       },
     });
   } else {
-    await client.favorite.create({
+    await client.interest.create({
       data: {
         user: {
           connect: {
             id: user?.id,
           },
         },
-        product: {
+        post: {
           connect: {
             id: cleanId,
           },

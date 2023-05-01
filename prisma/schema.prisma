@@ -20,8 +20,11 @@ model User {
   name      String
   avatar    String?
   tokens    Token[]
-  Product   Product[]
-  Favorite  Favorite[]
+  products  Product[]
+  favorite  Favorite[]
+  posts     Post[]
+  answers   Answer[]
+  interests Interest[]
 }
 
 model Token {
@@ -62,4 +65,44 @@ model Favorite {
 
   @@index([userId])
   @@index([productId])
+}
+
+model Post {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  question  String     @db.MediumText
+  answers   Answer[]
+  interests Interest[]
+
+  @@index([userId])
+}
+
+model Answer {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  answer    String   @db.MediumText
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+
+  @@index([userId])
+  @@index([postId])
+}
+
+model Interest {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+
+  @@index([userId])
+  @@index([postId])
 }

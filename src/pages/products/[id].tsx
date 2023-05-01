@@ -29,7 +29,7 @@ const ItemDetail: NextPage = () => {
     router.query.id ? `/api/products/${router.query.id}` : null
   );
 
-  const [toggleFavorite] = useMutation(
+  const [toggleFavorite, { loading }] = useMutation(
     `/api/products/${router.query.id}/favorite`
   );
 
@@ -37,7 +37,9 @@ const ItemDetail: NextPage = () => {
     if (!data) return;
     boundMutate((prev: any) => ({ ...prev, isLiked: !data.isLiked }), false);
     // mutate("/api/users/me", (prev: any) => ({ ok: !prev.ok }), false);
-    toggleFavorite({});
+    if (!loading) {
+      toggleFavorite({});
+    }
   };
 
   return (

@@ -12,7 +12,7 @@ export default function Avatar({
   size,
   onClick,
   url,
-  id,
+  id, //id of the user
   ...rest
 }: AvatarProps) {
   return (
