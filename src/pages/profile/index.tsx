@@ -2,8 +2,13 @@ import Avatar from "@/components/avatar";
 import Layout from "@/components/layout";
 import type { NextPage } from "next";
 import Link from "next/link";
+import useSWR from "swr";
 
 const Profile: NextPage = () => {
+  const { data: salesData } = useSWR(`/api/users/me/records?kind=Sale`);
+  const { data: purchaseData } = useSWR(`/api/users/me/records?kind=Purchase`);
+  const { data: favoriteData } = useSWR(`/api/users/me/records?kind=Favorite`);
+
   return (
     <Layout title="My Profile" hasTabBar>
       <div className="px-4 py-5">

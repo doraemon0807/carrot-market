@@ -23,10 +23,10 @@ export default function Enter() {
   const router = useRouter();
 
   const [enter, { loading, data, error }] =
-    useMutation<MutationResult>("/api/users/enter");
+    useMutation<MutationResult>("/api/users/enter"); //api to send token
 
   const [confirmToken, { loading: tokenLoading, data: tokenData }] =
-    useMutation<MutationResult>("/api/users/confirm");
+    useMutation<MutationResult>("/api/users/confirm"); //api to confirm token
 
   const { register, reset, handleSubmit } = useForm<EnterForm>();
   const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
@@ -54,6 +54,7 @@ export default function Enter() {
 
   useEffect(() => {
     if (tokenData?.ok) {
+      console.log("OH YES!");
       router.push("/");
     }
   }, [tokenData, router]);
