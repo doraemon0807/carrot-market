@@ -1,5 +1,6 @@
 import FloatButton from "@/components/floating-button";
 import Layout from "@/components/layout";
+import useCoords from "@/libs/client/useCoords";
 import { Post, User } from "@prisma/client";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -19,8 +20,12 @@ interface PostsResponse {
 }
 
 const Community: NextPage = () => {
-  const { data } = useSWR<PostsResponse>(`/api/posts`);
-  console.log(data);
+  const { latitude, longitude } = useCoords();
+  const { data } = useSWR<PostsResponse>(
+    latitude && longitude
+      ? `/api/posts?latitude=${latitude}&longitude=${longitude}`
+      : null
+  );
 
   return (
     <Layout title="Community" hasTabBar>
@@ -28,7 +33,7 @@ const Community: NextPage = () => {
         <div>Loading...</div>
       ) : (
         <div className="space-y-8 px-5 py-5">
-          {data.posts.map((post) => (
+          {data.posts?.map((post) => (
             <div key={post.id} className="flex flex-col items-start">
               <Link
                 className="flex w-full flex-col items-start"
