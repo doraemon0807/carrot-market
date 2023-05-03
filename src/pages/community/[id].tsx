@@ -189,7 +189,7 @@ const CommunityPostDetail: NextPage = () => {
               register={register("answer", { required: true, minLength: 5 })}
               placeholder="Answer this question!"
             />
-            <Button text={answerLoading ? "Loading..." : "Reply"} />
+            <Button loading={answerLoading} text="Reply" />
           </form>
         </div>
       )}

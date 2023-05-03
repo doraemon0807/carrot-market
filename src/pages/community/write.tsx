@@ -26,7 +26,7 @@ const Write: NextPage = () => {
 
   const onValid = (data: WriteForm) => {
     if (loading) return;
-    post({...data, latitude, longitude});
+    post({ ...data, latitude, longitude });
   };
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const Write: NextPage = () => {
           required
           placeholder="Ask a question!"
         />
-        <Button text={loading ? "Loading..." : "Post"} />
+        <Button loading={loading} text="Post" />
       </form>
     </Layout>
   );

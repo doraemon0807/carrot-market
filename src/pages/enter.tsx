@@ -79,7 +79,7 @@ export default function Enter() {
                 kind="text"
                 required
               />
-              <Button text={tokenLoading ? "Loading..." : "Confirm Token"} />
+              <Button loading={tokenLoading} text="Confirm Token" />
             </div>
           </form>
         ) : (
@@ -128,7 +128,7 @@ export default function Enter() {
                     kind="text"
                     required
                   />
-                  <Button text={loading ? "Loading..." : "Get Login Link"} />
+                  <Button loading={loading} text="Get Login Link" />
                 </div>
               )}
               {method === "phone" && (
@@ -142,9 +142,7 @@ export default function Enter() {
                     kind="phone"
                     required
                   />
-                  <Button
-                    text={loading ? "Loading..." : "Get One-time Password"}
-                  />
+                  <Button loading={loading} text="Get One-time Password" />
                 </div>
               )}
             </form>

@@ -3,10 +3,16 @@ import cls from "@/libs/client/utils";
 interface ButtonProps {
   large?: boolean;
   text: string;
+  loading?: boolean;
   [key: string]: any;
 }
 
-export default function Button({ large = false, text, ...rest }: ButtonProps) {
+export default function Button({
+  large = false,
+  text,
+  loading,
+  ...rest
+}: ButtonProps) {
   return (
     <button
       {...rest}
@@ -15,7 +21,7 @@ export default function Button({ large = false, text, ...rest }: ButtonProps) {
         large ? "py-3 text-base" : "py-2 text-sm"
       )}
     >
-      {text}
+      {loading ? "Loading..." : text}
     </button>
   );
 }

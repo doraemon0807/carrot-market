@@ -1,9 +1,13 @@
 import Authorization from "@/components/auth";
 import "@/styles/globals.css";
+import { User } from "@prisma/client";
 import type { AppProps } from "next/app";
+import { useState } from "react";
 import { SWRConfig } from "swr";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
+  const [user, setUser] = useState<User>();
+
   return (
     <SWRConfig
       value={{
@@ -11,10 +15,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           fetch(url).then((response) => response.json()),
       }}
     >
-      <Authorization />
-      <div className="mx-auto w-full max-w-xl font-Roboto">
-        <Component {...pageProps} />
-      </div>
+      <Authorization setUser={setUser}>
+        <Component {...pageProps} user={user} />
+      </Authorization>
     </SWRConfig>
   );
 }
