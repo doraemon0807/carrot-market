@@ -7,7 +7,12 @@ export default function useUser() {
   const router = useRouter();
 
   useEffect(() => {
-    if (data && !data.ok) {
+    //if user is logged in and go to enter -> go to home
+    if (data && data.ok && router.pathname === "/enter") {
+      router.replace("/");
+    }
+    //if user is not logged in and go to non-enter -> go to enter
+    if (data && !data.ok && router.pathname !== "/enter") {
       router.replace("/enter");
     }
   }, [data, router]);

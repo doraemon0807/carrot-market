@@ -28,7 +28,7 @@ export default function Enter() {
   const [confirmToken, { loading: tokenLoading, data: tokenData }] =
     useMutation<MutationResult>("/api/users/confirm"); //api to confirm token
 
-  const { register, reset, handleSubmit } = useForm<EnterForm>();
+  const { register, reset, handleSubmit, clearErrors } = useForm<EnterForm>();
   const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
     useForm<TokenForm>();
   const [method, setMethod] = useState<"email" | "phone">("email");
@@ -49,6 +49,7 @@ export default function Enter() {
 
   const onTokenValid = (validForm: TokenForm) => {
     if (tokenLoading) return;
+    clearErrors();
     confirmToken(validForm);
   };
 

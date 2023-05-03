@@ -2,6 +2,7 @@ import Avatar from "@/components/avatar";
 import Button from "@/components/button";
 import Input from "@/components/input";
 import Layout from "@/components/layout";
+import useUser from "@/libs/client/useUser";
 import type { NextPage } from "next";
 
 const EditProfile: NextPage = () => {

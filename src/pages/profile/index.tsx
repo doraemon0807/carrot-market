@@ -1,21 +1,48 @@
 import Avatar from "@/components/avatar";
 import Layout from "@/components/layout";
+import useUser from "@/libs/client/useUser";
+import cls from "@/libs/client/utils";
+import { Kind, Record, Review, User } from "@prisma/client";
 import type { NextPage } from "next";
 import Link from "next/link";
 import useSWR from "swr";
 
+interface ReviewWithUser extends Review {
+  createdBy: User;
+}
+
+interface ReviewsResponse {
+  ok: boolean;
+  reviews: ReviewWithUser[];
+}
+
+interface RecordResponse {
+  ok: boolean;
+  records: Record;
+  kind: Kind;
+}
+
 const Profile: NextPage = () => {
-  const { data: salesData } = useSWR(`/api/users/me/records?kind=Sale`);
-  const { data: purchaseData } = useSWR(`/api/users/me/records?kind=Purchase`);
-  const { data: favoriteData } = useSWR(`/api/users/me/records?kind=Favorite`);
+  const { data: salesData } = useSWR<RecordResponse>(
+    `/api/users/me/records?kind=Sale`
+  );
+  const { data: purchaseData } = useSWR<RecordResponse>(
+    `/api/users/me/records?kind=Purchase`
+  );
+  const { data: favoriteData } = useSWR<RecordResponse>(
+    `/api/users/me/records?kind=Favorite`
+  );
+  const { data: reviewData } = useSWR<ReviewsResponse>("/api/reviews");
+
+  const { user, isLoading } = useUser();
 
   return (
     <Layout title="My Profile" hasTabBar>
       <div className="px-4 py-5">
         <div className="flex items-center space-x-3">
-          <Avatar size="large" url="" />
+          <Avatar id={user?.id} size="large" url={user?.avatar} />
           <div className="flex flex-col">
-            <span className="font-medium text-gray-900">Steve Jebs</span>
+            <span className="font-medium text-gray-900">{user?.name}</span>
             <Link href="/profile/edit">
               <span className="text-sm text-gray-500">Edit profile &rarr;</span>
             </Link>
@@ -91,67 +118,41 @@ const Profile: NextPage = () => {
           </div>
         </div>
         <div className="mt-12">
-          <div className="flex items-center space-x-4">
-            <Avatar url="" />
-            <div>
-              <h4 className="pl-[2px] text-sm font-bold text-gray-900">니꼬</h4>
-              <div className="flex items-center">
-                <svg
-                  className="h-5 w-5 text-yellow-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  className="h-5 w-5 text-yellow-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  className="h-5 w-5 text-yellow-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  className="h-5 w-5 text-yellow-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
+          {reviewData?.reviews.map((review) => (
+            <div key={review.id}>
+              <div className="flex items-center space-x-4">
+                <Avatar
+                  id={review?.createdBy?.id + ""}
+                  url={review?.createdBy?.avatar}
+                />
+                <div>
+                  <h4 className="pl-[2px] text-sm font-medium text-gray-900">
+                    {review?.createdBy.name}
+                  </h4>
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className={cls(
+                          "h-5 w-5",
+                          review.score > i ? "text-yellow-400" : "text-gray-300"
+                        )}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 text-sm text-gray-600">
+                <p>{review?.review}</p>
               </div>
             </div>
-          </div>
-          <div className="mt-4 text-sm text-gray-600">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-              earum harum exercitationem accusamus nisi maiores quisquam
-              repellendus obcaecati quo expedita ipsam distinctio eligendi totam
-              quod, quia adipisci nesciunt a neque.
-            </p>
-          </div>
+          ))}
         </div>
       </div>
     </Layout>

@@ -13,16 +13,38 @@ async function handler(
     query: { kind },
   } = req;
 
-  console.log(req.query);
-
-  const records = await client.record.findMany({
-    where: {
-      userId: user?.id,
-      kind: kind as Kind,
-    },
-    include: {
-      product: true,
-    },
+  const records = (
+    await client.record.findMany({
+      where: {
+        userId: user?.id,
+        kind: kind as Kind,
+      },
+      include: {
+        product: {
+          include: {
+            _count: {
+              select: {
+                records: {
+                  where: {
+                    kind: "Favorite",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+  ).map((record) => {
+    return {
+      ...record,
+      product: {
+        ...record.product,
+        _count: {
+          favorite: record.product._count.records,
+        },
+      },
+    };
   });
 
   res.json({
