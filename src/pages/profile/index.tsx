@@ -23,15 +23,16 @@ interface RecordResponse {
 }
 
 const Profile: NextPage = () => {
-  const { data: salesData } = useSWR<RecordResponse>(
-    `/api/users/me/records?kind=Sale`
-  );
-  const { data: purchaseData } = useSWR<RecordResponse>(
-    `/api/users/me/records?kind=Purchase`
-  );
-  const { data: favoriteData } = useSWR<RecordResponse>(
-    `/api/users/me/records?kind=Favorite`
-  );
+  // const { data: salesData } = useSWR<RecordResponse>(
+  //   `/api/users/me/records?kind=Sale`
+  // );
+  // const { data: purchaseData } = useSWR<RecordResponse>(
+  //   `/api/users/me/records?kind=Purchase`
+  // );
+  // const { data: favoriteData } = useSWR<RecordResponse>(
+  //   `/api/users/me/records?kind=Favorite`
+  // );
+
   const { data: reviewData } = useSWR<ReviewsResponse>("/api/reviews");
 
   const { user, isLoading } = useUser();
@@ -40,7 +41,7 @@ const Profile: NextPage = () => {
     <Layout title="My Profile" hasTabBar>
       <div className="px-4 py-5">
         <div className="flex items-center space-x-3">
-          <Avatar id={user?.id} size="large" url={user?.avatar} />
+          <Avatar id={user?.id + ""} size="large" url={user?.avatar!} />
           <div className="flex flex-col">
             <span className="font-medium text-gray-900">{user?.name}</span>
             <Link href="/profile/edit">

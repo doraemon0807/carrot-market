@@ -127,10 +127,10 @@ export default function Layout({
             <span className="text-xs">Chat</span>
           </Link>
           <Link
-            href="/stream"
+            href="/streams"
             className={cls(
               "flex flex-col items-center space-y-2",
-              router.pathname === "/stream" ? "text-orange-500" : ""
+              router.pathname === "/streams" ? "text-orange-500" : ""
             )}
           >
             <svg

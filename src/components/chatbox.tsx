@@ -1,8 +1,16 @@
-export default function Chatbox() {
+import { UseFormRegisterReturn } from "react-hook-form";
+
+interface ChatboxProp {
+  register: UseFormRegisterReturn;
+  [key: string]: any;
+}
+
+export default function Chatbox({ register }: ChatboxProp) {
   return (
     <div className="fixed inset-x-0 bottom-0 mx-auto w-full max-w-xl bg-white px-4 py-2">
       <div className="relative flex items-center">
         <input
+        {...register}
           className="w-full rounded-full border-gray-300 pr-11 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-orange-500"
           type="text"
         />

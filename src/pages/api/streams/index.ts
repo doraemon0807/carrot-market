@@ -7,48 +7,39 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  if (req.method === "GET") {
-    const products = (
-      await client.product.findMany({
-        include: {
-          _count: {
-            select: {
-              records: {
-                where: {
-                  kind: "Favorite",
-                },
-              },
-            },
-          },
-        },
-      })
-    ).map((product) => {
-      return {
-        ...product,
-        _count: {
-          favorite: product._count.records,
-        },
-      };
-    });
+  const {
+    session: { user },
+    body: { name, brand, description, price },
+    query: { page },
+  } = req;
 
-    res.json({
-      ok: true,
-      products,
-    });
-  }
-  if (req.method === "POST") {
+  if (req.method === "GET") {
+    //get lists of streams
+
     const {
-      body: { name, price, description, brand },
-      session: { user },
+      query: { page },
     } = req;
 
-    const product = await client.product.create({
+    const offset = 5;
+
+    const streams = await client.stream.findMany({
+      take: offset,
+      skip: (Number(page) - 1) * offset,
+    });
+
+    const streamCount = await client.stream.count();
+
+    res.json({ ok: true, streams, totalPage: Math.ceil(streamCount / offset) });
+  }
+
+  if (req.method === "POST") {
+    //create stream
+    const stream = await client.stream.create({
       data: {
         name,
         brand,
         price,
         description,
-        image: "xx",
         user: {
           connect: {
             id: user?.id,
@@ -59,7 +50,7 @@ async function handler(
 
     res.json({
       ok: true,
-      product,
+      stream,
     });
   }
 }

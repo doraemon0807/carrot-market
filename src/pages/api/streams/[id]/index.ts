@@ -8,64 +8,35 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const {
-    query: { id },
-    session: { user },
+    query: { id }, //id of stream
   } = req;
-
   const cleanId = Number(id);
 
-  const post = await client.post.findUnique({
+  const stream = await client.stream.findUnique({
     where: {
       id: cleanId,
     },
     include: {
-      user: {
+      messages: {
         select: {
           id: true,
-          name: true,
-          avatar: true,
-        },
-      },
-      answers: {
-        select: {
-          answer: true,
-          id: true,
-          createdAt: true,
+          message: true,
           user: {
             select: {
               id: true,
-              name: true,
               avatar: true,
             },
           },
-        },
-        take: 10,
-      },
-      _count: {
-        select: {
-          answers: true,
-          interests: true,
         },
       },
     },
   });
 
-  const isInterested = Boolean(
-    await client.interest.findFirst({
-      where: {
-        postId: cleanId,
-        userId: user?.id,
-      },
-      select: {
-        id: true,
-      },
-    })
-  );
+  if (!stream) res.status(404).json({ ok: false, error: "Stream Not Found." });
 
   res.json({
     ok: true,
-    post,
-    isInterested,
+    stream,
   });
 }
 
