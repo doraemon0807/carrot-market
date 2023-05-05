@@ -41,6 +41,14 @@ async function handler(
     const posts = await client.post.findMany({
       take: offset,
       skip: (Number(page) - 1) * offset,
+      orderBy: [
+        {
+          createdAt: "desc",
+        },
+        {
+          id: "desc",
+        },
+      ],
       include: {
         user: {
           select: {

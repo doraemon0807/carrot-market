@@ -18,6 +18,14 @@ async function handler(
       await client.product.findMany({
         take: offset,
         skip: (Number(page) - 1) * offset,
+        orderBy: [
+          {
+            createdAt: "desc",
+          },
+          {
+            id: "desc",
+          },
+        ],
         include: {
           _count: {
             select: {
@@ -50,7 +58,7 @@ async function handler(
 
   if (req.method === "POST") {
     const {
-      body: { name, price, description, brand },
+      body: { name, price, description, brand, photoId },
       session: { user },
     } = req;
 
@@ -60,7 +68,7 @@ async function handler(
         brand,
         price,
         description,
-        image: "xx",
+        image: photoId,
         user: {
           connect: {
             id: user?.id,

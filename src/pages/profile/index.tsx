@@ -1,7 +1,8 @@
+import { UserProp } from "@/components/auth";
 import Avatar from "@/components/avatar";
 import Layout from "@/components/layout";
 import useUser from "@/libs/client/useUser";
-import cls from "@/libs/client/utils";
+import { cls } from "@/libs/client/utils";
 import { Kind, Record, Review, User } from "@prisma/client";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -16,13 +17,13 @@ interface ReviewsResponse {
   reviews: ReviewWithUser[];
 }
 
-interface RecordResponse {
-  ok: boolean;
-  records: Record;
-  kind: Kind;
-}
+// interface RecordResponse {
+//   ok: boolean;
+//   records: Record;
+//   kind: Kind;
+// }
 
-const Profile: NextPage = () => {
+export default function Profile({ user }: UserProp) {
   // const { data: salesData } = useSWR<RecordResponse>(
   //   `/api/users/me/records?kind=Sale`
   // );
@@ -35,13 +36,14 @@ const Profile: NextPage = () => {
 
   const { data: reviewData } = useSWR<ReviewsResponse>("/api/reviews");
 
-  const { user, isLoading } = useUser();
+  //Refetch user info to update avatar URL
+  useUser();
 
   return (
     <Layout title="My Profile" hasTabBar>
       <div className="px-4 py-5">
         <div className="flex items-center space-x-3">
-          <Avatar id={user?.id + ""} size="large" url={user?.avatar!} />
+          <Avatar id={String(user?.id)} size="large" imgId={user?.avatar} />
           <div className="flex flex-col">
             <span className="font-medium text-gray-900">{user?.name}</span>
             <Link href="/profile/edit">
@@ -124,7 +126,7 @@ const Profile: NextPage = () => {
               <div className="flex items-center space-x-4">
                 <Avatar
                   id={review?.createdBy?.id + ""}
-                  url={review?.createdBy?.avatar}
+                  imgId={review?.createdBy?.avatar}
                 />
                 <div>
                   <h4 className="pl-[2px] text-sm font-medium text-gray-900">
@@ -158,6 +160,4 @@ const Profile: NextPage = () => {
       </div>
     </Layout>
   );
-};
-
-export default Profile;
+}

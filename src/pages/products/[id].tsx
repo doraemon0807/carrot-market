@@ -2,9 +2,10 @@ import Avatar from "@/components/avatar";
 import Button from "@/components/button";
 import Layout from "@/components/layout";
 import useMutation from "@/libs/client/useMutation";
-import cls from "@/libs/client/utils";
+import { cls, useCFUrl } from "@/libs/client/utils";
 import { Product, User } from "@prisma/client";
 import type { NextPage } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useSWR, { useSWRConfig } from "swr";
@@ -23,7 +24,7 @@ interface ItemDetailResponse {
 const ItemDetail: NextPage = () => {
   const router = useRouter();
 
-  const { mutate } = useSWRConfig();
+  // const { mutate } = useSWRConfig();
 
   const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
@@ -48,11 +49,21 @@ const ItemDetail: NextPage = () => {
         <div>Loading...</div>
       ) : (
         <div className="px-4 py-10">
-          <div className="mb-8">
-            <div className="mx-auto aspect-square w-full bg-slate-300" />
+          <div className="mb-4">
+            <div className="relative z-[-1] pb-80">
+              <Image
+                alt=""
+                fill
+                src={useCFUrl({
+                  imgId: data.product.image,
+                  variant: "product",
+                })}
+                className="mx-auto w-full bg-slate-300 object-cover"
+              />
+            </div>
             <div className="my-2 flex items-center space-x-3 border-b py-3">
               <Avatar
-                url={data.product.user.avatar}
+                imgId={data.product.user.avatar}
                 id={data.product.user.name}
               />
               <Link href={`/users/profile/${data.product.user.name}`}>

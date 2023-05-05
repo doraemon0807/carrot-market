@@ -18,7 +18,7 @@ const Stream: NextPage = () => {
   const getKey = (pageIndex: number, previousPageData: StreamResponse) => {
     if (pageIndex === 0) return `/api/streams?page=1`;
     const page = pageIndex + 1;
-    if (page + 1 > previousPageData.totalPage) return null;
+    if (page > previousPageData.totalPage) return null;
     return `/api/streams?page=${page}`;
   };
 

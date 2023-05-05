@@ -5,7 +5,7 @@ import Input from "@/components/input";
 import Layout from "@/components/layout";
 import useMutation from "@/libs/client/useMutation";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface EditProfileForm {
@@ -13,6 +13,7 @@ interface EditProfileForm {
   phone?: string;
   name?: string;
   formError?: string;
+  avatar?: FileList;
 }
 
 interface EditProfileResponse {
@@ -29,6 +30,7 @@ export default function EditProfile({ user }: UserProp) {
     handleSubmit,
     setError,
     clearErrors,
+    watch,
     formState: { errors },
   } = useForm<EditProfileForm>();
 
@@ -39,22 +41,47 @@ export default function EditProfile({ user }: UserProp) {
     if (user?.name) setValue("name", user.name);
   }, [user, setValue]);
 
-  //API to grab user's info
+  //API to modify user's info
   const [editProfile, { data, loading }] =
     useMutation<EditProfileResponse>(`/api/users/me`);
 
-  const onValid = ({ email, phone, name }: EditProfileForm) => {
+  const onValid = async ({ email, phone, name, avatar }: EditProfileForm) => {
     if (loading) return;
     if (email === "" && phone === "" && name === "") {
       return setError("formError", {
         message: "Please fill in the form with proper value.",
       });
     }
-    editProfile({
-      email,
-      phone,
-      name,
-    });
+    //if avatar is modified
+    if (avatar && avatar.length > 0 && user) {
+      // ask for CF URL
+      const { uploadURL } = await (await fetch(`/api/files`)).json();
+
+      // upload file to CF URL by creating a javacript form and sending POST request
+      const form = new FormData();
+      form.append("file", avatar[0], String(user?.id));
+      const {
+        result: { id },
+      } = await (
+        await fetch(uploadURL, {
+          method: "POST",
+          body: form,
+        })
+      ).json();
+
+      editProfile({
+        email,
+        phone,
+        name,
+        avatarId: id,
+      });
+    } else {
+      editProfile({
+        email,
+        phone,
+        name,
+      });
+    }
   };
 
   //If useMutation returns error, update SetError
@@ -73,6 +100,18 @@ export default function EditProfile({ user }: UserProp) {
     }
   }, [data, router]);
 
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const avatar = watch("avatar");
+
+  //Update avatar preview
+  useEffect(() => {
+    //if avatar is modified
+    if (avatar && avatar.length > 0) {
+      const file = avatar[0];
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  }, [avatar]);
+
   return (
     <Layout title="Edit Profile" canGoBack>
       <form
@@ -81,13 +120,18 @@ export default function EditProfile({ user }: UserProp) {
         className="space-y-4 px-4 py-10"
       >
         <div className="flex items-center space-x-3">
-          <Avatar id={user?.id + ""} url="" />
+          <Avatar
+            id={user?.id + ""}
+            previewUrl={avatarPreview}
+            imgId={user?.avatar}
+          />
           <label
             htmlFor="picture"
             className="cursor-pointer rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 shadow-sm focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           >
             Change
             <input
+              {...register("avatar")}
               accept="image/*"
               id="picture"
               type="file"

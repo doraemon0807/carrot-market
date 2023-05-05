@@ -2,10 +2,10 @@ import FloatButton from "@/components/floating-button";
 import Item from "@/components/item";
 import Layout from "@/components/layout";
 import useInfiniteScroll from "@/libs/client/useInfiniteScroll";
-import useUser from "@/libs/client/useUser";
 import { Product } from "@prisma/client";
 import type { NextPage } from "next";
 import Head from "next/head";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 import useSWRInfinite from "swr/infinite";
@@ -28,7 +28,9 @@ const Home: NextPage = () => {
   const getKey = (pageIndex: number, previousPageData: ProductsResponse) => {
     if (pageIndex === 0) return `/api/products?page=1`;
     const page = pageIndex + 1;
-    if (page + 1 > previousPageData.totalPage) return null;
+    if (page > previousPageData.totalPage) {
+      return null;
+    }
     return `/api/products?page=${page}`;
   };
 

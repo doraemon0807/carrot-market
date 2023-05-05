@@ -3,7 +3,7 @@ import Button from "@/components/button";
 import Layout from "@/components/layout";
 import TextArea from "@/components/textarea";
 import useMutation from "@/libs/client/useMutation";
-import cls from "@/libs/client/utils";
+import { cls } from "@/libs/client/utils";
 import { Answer, Post, User } from "@prisma/client";
 import type { NextPage } from "next";
 import Link from "next/link";

@@ -25,6 +25,14 @@ async function handler(
     const streams = await client.stream.findMany({
       take: offset,
       skip: (Number(page) - 1) * offset,
+      orderBy: [
+        {
+          createdAt: "desc",
+        },
+        {
+          id: "desc",
+        },
+      ],
     });
 
     const streamCount = await client.stream.count();

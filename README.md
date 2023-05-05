@@ -7,6 +7,7 @@ General:
 - When there is 0 posts: index, community, stream, etc
 - When accessing non-existing posts: error 404 page
 - Paginate everything! Inifnite scroll?
+- Dark mode
 
 Enter:
 

@@ -35,7 +35,7 @@ const Community: NextPage = () => {
     if (pageIndex === 0)
       return `/api/posts?page=1&latitude=${latitude}&longitude=${longitude}`;
     const page = pageIndex + 1;
-    if (page + 1 > previousPageData.totalPage) return null;
+    if (page > previousPageData.totalPage) return null;
     return `/api/posts?page=${page}&latitude=${latitude}&longitude=${longitude}`;
   };
 
@@ -67,7 +67,7 @@ const Community: NextPage = () => {
             <div key={post.id} className="flex flex-col items-start">
               <Link
                 className="flex w-full flex-col items-start"
-                href={`/community/${post?.id}`}
+                href={`/community/${post.id}`}
               >
                 <span className="flex items-center rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-800">
                   Q&A
