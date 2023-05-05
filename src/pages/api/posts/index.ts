@@ -32,11 +32,15 @@ async function handler(
 
   if (req.method === "GET") {
     const {
-      query: { latitude, longitude }, //coords from params
+      query: { latitude, longitude, page }, //coords from params
     } = req;
     const parsedLatitude = Number(latitude);
     const parsedLongitude = Number(longitude);
+    const offset = 10;
+
     const posts = await client.post.findMany({
+      take: offset,
+      skip: (Number(page) - 1) * offset,
       include: {
         user: {
           select: {
@@ -52,20 +56,24 @@ async function handler(
           },
         },
       },
-      where: {
-        latitude: {
-          gte: parsedLatitude - 0.01,
-          lte: parsedLatitude + 0.01,
-        },
-        longitude: {
-          gte: parsedLongitude - 0.01,
-          lte: parsedLongitude + 0.01,
-        },
-      },
+      // where: {
+      //   latitude: {
+      //     gte: parsedLatitude - 0.01,
+      //     lte: parsedLatitude + 0.01,
+      //   },
+      //   longitude: {
+      //     gte: parsedLongitude - 0.01,
+      //     lte: parsedLongitude + 0.01,
+      //   },
+      // },
     });
+
+    const postCount = await client.post.count();
+
     res.json({
       ok: true,
       posts,
+      totalPage: Math.ceil(postCount / offset),
     });
   }
 }

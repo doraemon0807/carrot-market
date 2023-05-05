@@ -1,10 +1,13 @@
 import FloatButton from "@/components/floating-button";
 import Layout from "@/components/layout";
 import useCoords from "@/libs/client/useCoords";
+import useInfiniteScroll from "@/libs/client/useInfiniteScroll";
 import { Post, User } from "@prisma/client";
 import type { NextPage } from "next";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
+import useSWRInfinite from "swr/infinite";
 
 interface PostWithUser extends Post {
   user: User;
@@ -17,27 +20,54 @@ interface PostWithUser extends Post {
 interface PostsResponse {
   ok: boolean;
   posts: PostWithUser[];
+  totalPage: number;
 }
 
 const Community: NextPage = () => {
   const { latitude, longitude } = useCoords();
-  const { data } = useSWR<PostsResponse>(
-    latitude && longitude
-      ? `/api/posts?latitude=${latitude}&longitude=${longitude}`
-      : null
-  );
+  // const { data } = useSWR<PostsResponse>(
+  //   latitude && longitude
+  //     ? `/api/posts?latitude=${latitude}&longitude=${longitude}`
+  //     : null
+  // );
+
+  const getKey = (pageIndex: number, previousPageData: PostsResponse) => {
+    if (pageIndex === 0)
+      return `/api/posts?page=1&latitude=${latitude}&longitude=${longitude}`;
+    const page = pageIndex + 1;
+    if (page + 1 > previousPageData.totalPage) return null;
+    return `/api/posts?page=${page}&latitude=${latitude}&longitude=${longitude}`;
+  };
+
+  const { data, setSize, isLoading } = useSWRInfinite<PostsResponse>(getKey);
+  const [posts, setPosts] = useState<PostWithUser[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setPosts([]);
+      data.map((obj) => {
+        setPosts((prev) => prev.concat(obj.posts));
+      });
+    }
+  }, [data]);
+
+  const page = useInfiniteScroll();
+
+  useEffect(() => {
+    setSize(page);
+  }, [setSize, page]);
 
   return (
     <Layout title="Community" hasTabBar>
-      {!data ? (
+      {isLoading ? (
         <div>Loading...</div>
       ) : (
         <div className="space-y-8 px-5 py-5">
-          {data.posts?.map((post) => (
+          {posts?.map((post) => (
             <div key={post.id} className="flex flex-col items-start">
               <Link
                 className="flex w-full flex-col items-start"
-                href={`/community/${post.id}`}
+                href={`/community/${post?.id}`}
               >
                 <span className="flex items-center rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-800">
                   Q&A

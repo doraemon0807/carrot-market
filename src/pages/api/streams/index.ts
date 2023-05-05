@@ -20,7 +20,7 @@ async function handler(
       query: { page },
     } = req;
 
-    const offset = 5;
+    const offset = 10;
 
     const streams = await client.stream.findMany({
       take: offset,

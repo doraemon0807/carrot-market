@@ -2,14 +2,11 @@ import { PrismaClient } from "@prisma/client";
 
 const client = new PrismaClient();
 
-async function main() {
-  [...Array.from(Array(500).keys())].forEach(async (item) => {
-    const stream = await client.stream.create({
+async function createPosts() {
+  [...Array.from(Array(50).keys())].forEach(async (item) => {
+    const post = await client.post.create({
       data: {
-        name: String(item),
-        description: String(item),
-        price: item,
-        brand: String(item),
+        question: String(item),
         user: {
           connect: {
             id: 1,
@@ -17,10 +14,49 @@ async function main() {
         },
       },
     });
-    console.log(`${item}/500`);
+    console.log(`${item}/50`);
   });
 }
 
-main()
+// async function createStream() {
+//   [...Array.from(Array(50).keys())].forEach(async (item) => {
+//     const stream = await client.stream.create({
+//       data: {
+//         name: String(item),
+//         description: String(item),
+//         price: item,
+//         brand: String(item),
+//         user: {
+//           connect: {
+//             id: 1,
+//           },
+//         },
+//       },
+//     });
+//     console.log(`${item}/50`);
+//   });
+// }
+
+// async function createProduct() {
+//   [...Array.from(Array(50).keys())].forEach(async (item) => {
+//     const product = await client.product.create({
+//       data: {
+//         name: String(item),
+//         image: String(item),
+//         description: String(item),
+//         price: item,
+//         brand: String(item),
+//         user: {
+//           connect: {
+//             id: 1,
+//           },
+//         },
+//       },
+//     });
+//     console.log(`${item}/50`);
+//   });
+// }
+
+createPosts()
   .catch((e) => console.log(e))
   .finally(() => client.$disconnect());
