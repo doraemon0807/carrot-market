@@ -55,7 +55,6 @@ export default function Enter() {
 
   useEffect(() => {
     if (tokenData?.ok) {
-      console.log("OH YES!");
       router.push("/");
     }
   }, [tokenData, router]);
