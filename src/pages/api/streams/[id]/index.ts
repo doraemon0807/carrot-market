@@ -9,6 +9,7 @@ async function handler(
 ) {
   const {
     query: { id }, //id of stream
+    session: { user },
   } = req;
   const cleanId = Number(id);
 
@@ -32,11 +33,21 @@ async function handler(
     },
   });
 
-  if (!stream) res.status(404).json({ ok: false, error: "Stream Not Found." });
+  //censor key and url if not owner
+  const isOwner = stream?.userId == user?.id;
+
+  if (stream && !isOwner) {
+    stream.cloudflareKey = "xxxxx";
+    stream.cloudflareUrl = "xxxxx";
+  }
+
+  if (!stream)
+    return res.status(404).json({ ok: false, error: "Stream Not Found." });
 
   res.json({
     ok: true,
     stream,
+    isOwner,
   });
 }
 

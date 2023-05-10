@@ -26,6 +26,7 @@ interface StreamWithMessages extends Stream {
 interface StreamResponse {
   ok: boolean;
   stream: StreamWithMessages;
+  isOwner: boolean;
 }
 
 interface MessageForm {
@@ -88,7 +89,14 @@ export default function StreamDetail({ user }: UserProp) {
   return (
     <Layout title="Stream" canGoBack>
       <div className="space-y-4 px-4">
-        <div className="aspect-video w-full rounded-md bg-slate-300 shadow-sm"></div>
+        {data?.stream.cloudflareId ? (
+          <iframe
+            className="aspect-video w-full rounded-md bg-slate-300 shadow-sm"
+            src={`https://iframe.videodelivery.net/${data?.stream.cloudflareId}`}
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowFullScreen={true}
+          ></iframe>
+        ) : null}
 
         <div className="mt-10">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -101,6 +109,27 @@ export default function StreamDetail({ user }: UserProp) {
             ${data?.stream.price}
           </span>
           <p className="my-6 text-gray-700">{data?.stream.description}</p>
+          {data?.isOwner ? (
+            <div className="my-10 space-y-1 text-gray-900">
+              <h4 className="text-lg font-medium">Stream keys (secret)</h4>
+              <div className="flex flex-col space-y-1">
+                <h5 className="text-sm font-medium text-gray-900">
+                  Stream URL
+                </h5>
+                <div className="flex truncate rounded-sm border border-gray-300 bg-gray-100 p-2 text-xs text-gray-600">
+                  {data?.stream.cloudflareUrl}
+                </div>
+              </div>
+              <div className="flex flex-col space-y-1">
+                <h5 className="text-sm font-medium text-gray-900">
+                  Stream Key
+                </h5>
+                <div className="flex truncate rounded-sm border border-gray-300 bg-gray-100 p-2 text-xs text-gray-600">
+                  {data?.stream.cloudflareKey}
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
 
         <h2 className="text-2xl font-bold text-gray-900">Live Chat</h2>
@@ -110,7 +139,7 @@ export default function StreamDetail({ user }: UserProp) {
             <ChatMessage
               key={message.id}
               message={message.message}
-              reverted={message.user.id !== user.id}
+              reverted={message.user.id !== user?.id}
               avatarUrl={message.user.avatar}
               senderId={message.user.id}
             />

@@ -23,6 +23,10 @@ Community:
 
 Stream:
 
+- Currently live?
+- How many viewers?
+- If stream is over -> show recorded video
+
 Profile:
 
 - Geolocation customize search radius from profile
