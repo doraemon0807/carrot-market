@@ -104,7 +104,7 @@ const CommunityPostDetail: NextPage = () => {
             Q&A
           </span>
           <div className="mb-3 flex cursor-pointer items-center space-x-3  border-b px-4 pb-3">
-            <Avatar id={data.post.userId + ""} url={data.post?.user?.avatar} />
+            <Avatar id={data.post.userId + ""} imgId={data.post?.user?.avatar} />
             <Link href={`/users/profile/${data.post.user.name}`}>
               <p className="text-sm font-medium text-gray-700">
                 {data.post.user.name}
@@ -167,7 +167,7 @@ const CommunityPostDetail: NextPage = () => {
               <div key={answer.id} className="flex items-start space-x-3">
                 <Avatar
                   id={answer.user.id + ""}
-                  url={answer.user.avatar}
+                  imgId={answer.user.avatar}
                   size="small"
                 />
                 <div className="flex flex-col">

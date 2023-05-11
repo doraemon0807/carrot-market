@@ -21,7 +21,7 @@ export default function ChatMessage({
         reverted ? "" : "flex-row-reverse space-x-reverse"
       )}
     >
-      <Avatar id={senderId + ""} url={avatarUrl + ""} size="small" />
+      <Avatar id={String(senderId)} imgId={String(avatarUrl)} size="small" />
       <div className="w-1/2 rounded-md border border-gray-300 bg-white p-2 text-sm text-gray-700 shadow-sm">
         <p>{message}</p>
       </div>

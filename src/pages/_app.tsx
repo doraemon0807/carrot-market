@@ -7,7 +7,7 @@ import { SWRConfig } from "swr";
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [user, setUser] = useState<User>();
-  const [userLoading, setUserLoading] = useState(false);
+  console.log("App is running");
 
   return (
     <SWRConfig
@@ -16,8 +16,8 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           fetch(url).then((response) => response.json()),
       }}
     >
-      <Authorization setUser={setUser} setUserLoading={setUserLoading}>
-        <Component {...pageProps} user={user} userLoading={userLoading} />
+      <Authorization setUser={setUser}>
+        <Component {...pageProps} user={user} />
       </Authorization>
     </SWRConfig>
   );

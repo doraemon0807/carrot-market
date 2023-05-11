@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { cls } from "@/libs/client/utils";
 import Button from "@/components/button";
 import Input from "@/components/input";

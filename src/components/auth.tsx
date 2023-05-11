@@ -5,7 +5,6 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 interface AuthProp {
   children: React.ReactNode;
   setUser: Dispatch<SetStateAction<User | undefined>>;
-  setUserLoading: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface UserProp {

@@ -63,7 +63,7 @@ const Upload: NextPage = () => {
     if (data?.ok) {
       router.push(`/products/${data.product.id}`);
     }
-  }, [data]);
+  }, [data, router]);
 
   const photo = watch("photo");
   const [photoPreview, setPhotoPreview] = useState("");

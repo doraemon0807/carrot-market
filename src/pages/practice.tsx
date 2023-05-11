@@ -7,7 +7,10 @@ export default function Practice() {
         </span>
         <ul className="overflow-hidden rounded-md">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div className="flex items-center justify-between p-1 odd:bg-green-100 even:bg-blue-100 dark:odd:bg-green-900 dark:even:bg-blue-900">
+            <div
+              key={i}
+              className="flex items-center justify-between p-1 odd:bg-green-100 even:bg-blue-100 dark:odd:bg-green-900 dark:even:bg-blue-900"
+            >
               <span className="text-gray-700 dark:text-gray-200">
                 Gray Chair
               </span>

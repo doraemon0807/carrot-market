@@ -43,6 +43,11 @@ const ItemDetail: NextPage = () => {
     }
   };
 
+  const src = useCFUrl({
+    imgId: data?.product.image || null,
+    variant: "product",
+  });
+
   return (
     <Layout canGoBack>
       {!data ? (
@@ -54,10 +59,7 @@ const ItemDetail: NextPage = () => {
               <Image
                 alt=""
                 fill
-                src={useCFUrl({
-                  imgId: data.product.image,
-                  variant: "product",
-                })}
+                src={src}
                 className="mx-auto w-full bg-slate-300 object-cover"
               />
             </div>

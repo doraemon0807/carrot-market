@@ -10,18 +10,19 @@ interface ProfileResponse {
 
 export default function useUser() {
   const { data, error } = useSWR<ProfileResponse>("/api/users/me");
-  const router = useRouter();
 
-  useEffect(() => {
-    //if user is logged in and go to enter -> go to home
-    if (data && data.ok && router.pathname === "/enter") {
-      router.replace("/");
-    }
-    //if user is not logged in and go to non-enter -> go to enter
-    if (data && !data.ok && router.pathname !== "/enter") {
-      router.replace("/enter");
-    }
-  }, [data, router]);
+  // const router = useRouter();
+
+  // useEffect(() => {
+  //   //if user is logged in and go to enter -> go to home
+  //   if (data && data.ok && router.pathname === "/enter") {
+  //     router.replace("/");
+  //   }
+  //   //if user is not logged in and go to non-enter -> go to enter
+  //   if (data && !data.ok && router.pathname !== "/enter") {
+  //     router.replace("/enter");
+  //   }
+  // }, [data, router]);
 
   return { user: data?.profile, isLoading: !data && !error };
 

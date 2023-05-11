@@ -11,7 +11,7 @@ export default function Chatroom({ name, message, id }: ChatroomProps) {
   return (
     <Link href={`/chats/${id}`}>
       <div className="my-2 flex cursor-pointer items-center space-x-3 px-4 py-3">
-        <Avatar url="" />
+        <Avatar id="" imgId="" />
         <div>
           <p className=" text-gray-700">{name}</p>
           <p className="text-sm text-gray-500">{message}</p>

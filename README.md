@@ -1,5 +1,12 @@
 # Carrot Market
 
+Code Challenge:
+
+- Talk to seller -> Create chatroom
+- useSWR for list of chatrooms
+- Reserve item button
+- Reserve the item for future date -> after date passes, button to leave review
+
 General:
 
 - Log out
@@ -26,6 +33,7 @@ Stream:
 - Currently live?
 - How many viewers?
 - If stream is over -> show recorded video
+- End live stream button to end live
 
 Profile:
 

@@ -1,6 +1,6 @@
 interface CFUrlProp {
   variant: string;
-  imgId: string;
+  imgId: string | null;
 }
 
 export function useCFUrl({ variant, imgId }: CFUrlProp) {

@@ -18,6 +18,7 @@ export default function Avatar({
   id, //id of the user
   ...rest
 }: AvatarProps) {
+  const src = useCFUrl({ variant: "avatar", imgId: imgId });
   return (
     <Link href={`/users/profile/${id}`}>
       {previewUrl ? (
@@ -41,7 +42,7 @@ export default function Avatar({
           alt=""
           width={48}
           height={48}
-          src={useCFUrl({ imgId: imgId, variant: "avatar" })}
+          src={src}
           {...rest}
           className={cls(
             "rounded-full bg-slate-500",
