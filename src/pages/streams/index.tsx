@@ -41,7 +41,7 @@ const Stream: NextPage = () => {
   }, [setSize, page]);
 
   return (
-    <Layout title="Live Streams" hasTabBar>
+    <Layout title="Live Streams" hasTabBar seoTitle="Streams">
       {isLoading ? (
         <div>Loading...</div>
       ) : (

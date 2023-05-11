@@ -87,7 +87,7 @@ export default function StreamDetail({ user }: UserProp) {
   };
 
   return (
-    <Layout title="Stream" canGoBack>
+    <Layout title="Stream" canGoBack seoTitle="Stream Detail">
       <div className="space-y-4 px-4">
         {data?.stream.cloudflareId ? (
           <iframe

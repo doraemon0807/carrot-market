@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 
 const Chat: NextPage = () => {
   return (
-    <Layout title="Chats" hasTabBar>
+    <Layout title="Chats" hasTabBar seoTitle="Chats">
       <div className="divide-y-[1px]">
         {[1, 2, 3, 4, 5, 6].map((_, i) => (
           <div key={i}>

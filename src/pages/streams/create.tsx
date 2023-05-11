@@ -41,7 +41,7 @@ const Create: NextPage = () => {
   }, [data, router]);
 
   return (
-    <Layout title="Start Streaming" canGoBack>
+    <Layout title="Start Streaming" canGoBack seoTitle="Create Stream">
       <form onSubmit={handleSubmit(onValid)} className="mt-4 space-y-2 px-4">
         <Input
           register={register("name", { required: true })}

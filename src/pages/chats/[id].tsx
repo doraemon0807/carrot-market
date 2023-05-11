@@ -8,7 +8,7 @@ const ChatDetail: NextPage = () => {
   const { register } = useForm();
 
   return (
-    <Layout title="Chat" canGoBack>
+    <Layout title="Chat" canGoBack seoTitle="Chat">
       <div className="mb-6 space-y-4 px-4">
         <Message
           senderId={1}

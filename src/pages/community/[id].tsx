@@ -95,7 +95,7 @@ const CommunityPostDetail: NextPage = () => {
   }, [answerData, reset, mutate]);
 
   return (
-    <Layout canGoBack>
+    <Layout canGoBack seoTitle="Community Detail">
       {!data ? (
         <div>Loading...</div>
       ) : (

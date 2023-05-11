@@ -5,7 +5,7 @@ import type { NextPage } from "next";
 
 const PurchaseList: NextPage = () => {
   return (
-    <Layout title="Bought Items" hasTabBar canGoBack>
+    <Layout title="Bought Items" hasTabBar canGoBack seoTitle="Bought Items">
       <div className="flex flex-col space-y-5 py-5">
         <ProductList kind="Purchase" />
       </div>

@@ -53,10 +53,7 @@ const Home: NextPage = () => {
   }, [setSize, page]);
 
   return (
-    <Layout title="Home" hasTabBar>
-      <Head>
-        <title>Home</title>
-      </Head>
+    <Layout title="Home" hasTabBar seoTitle="Home">
       {isLoading ? (
         <div>Loading...</div>
       ) : (

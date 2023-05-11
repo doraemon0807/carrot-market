@@ -49,7 +49,7 @@ const ItemDetail: NextPage = () => {
   });
 
   return (
-    <Layout canGoBack>
+    <Layout canGoBack seoTitle="Product Detail">
       {!data ? (
         <div>Loading...</div>
       ) : (

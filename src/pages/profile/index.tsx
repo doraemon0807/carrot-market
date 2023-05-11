@@ -40,7 +40,7 @@ export default function Profile({ user }: UserProp) {
   useUser();
 
   return (
-    <Layout title="My Profile" hasTabBar>
+    <Layout title="My Profile" hasTabBar seoTitle="Profile">
       <div className="px-4 py-5">
         <div className="flex items-center space-x-3">
           <Avatar id={String(user?.id)} size="large" imgId={user?.avatar} />

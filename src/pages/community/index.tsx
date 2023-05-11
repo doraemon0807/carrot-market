@@ -58,7 +58,7 @@ const Community: NextPage = () => {
   }, [setSize, page]);
 
   return (
-    <Layout title="Community" hasTabBar>
+    <Layout title="Community" hasTabBar seoTitle="Community">
       {isLoading ? (
         <div>Loading...</div>
       ) : (

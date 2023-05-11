@@ -113,7 +113,7 @@ export default function EditProfile({ user }: UserProp) {
   }, [avatar]);
 
   return (
-    <Layout title="Edit Profile" canGoBack>
+    <Layout title="Edit Profile" canGoBack seoTitle="Edit Profile">
       <form
         onChange={() => clearErrors()}
         onSubmit={handleSubmit(onValid)}
