@@ -3,3 +3,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.blog-post-content {
+  h1 {
+    @apply mb-5 text-red-500;
+  }
+
+  p {
+    @apply mb-1 text-gray-600;
+  }
+
+  ul {
+    @apply list-disc pl-10;
+  }
+}

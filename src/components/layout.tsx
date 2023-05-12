@@ -23,10 +23,12 @@ export default function Layout({
     router.back();
   };
 
+  const headText = `${seoTitle} | Carrot Market`;
+
   return (
     <div>
       <Head>
-        <title>{seoTitle} | Carrot Market</title>
+        <title>{headText}</title>
       </Head>
       <div className="fixed top-0 flex min-h-[52px] w-full max-w-xl items-center border-b bg-white px-10 py-3 text-lg font-medium text-gray-800">
         <div className="relative flex w-full items-center justify-center">

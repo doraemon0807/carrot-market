@@ -1,5 +1,6 @@
 import useUser from "@/libs/client/useUser";
 import { User } from "@prisma/client";
+import { NextPageContext } from "next";
 import { Dispatch, SetStateAction, useEffect } from "react";
 
 interface AuthProp {

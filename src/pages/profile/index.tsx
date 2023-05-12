@@ -3,10 +3,12 @@ import Avatar from "@/components/avatar";
 import Layout from "@/components/layout";
 import useUser from "@/libs/client/useUser";
 import { cls } from "@/libs/client/utils";
+import { withSsrSession } from "@/libs/server/withSession";
 import { Kind, Record, Review, User } from "@prisma/client";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage, NextPageContext } from "next";
 import Link from "next/link";
-import useSWR from "swr";
+import useSWR, { SWRConfig } from "swr";
+import client from "@/libs/server/client";
 
 interface ReviewWithUser extends Review {
   createdBy: User;
@@ -23,7 +25,7 @@ interface ReviewsResponse {
 //   kind: Kind;
 // }
 
-export default function Profile({ user }: UserProp) {
+export function Profile({ user }: UserProp) {
   // const { data: salesData } = useSWR<RecordResponse>(
   //   `/api/users/me/records?kind=Sale`
   // );
@@ -37,7 +39,7 @@ export default function Profile({ user }: UserProp) {
   const { data: reviewData } = useSWR<ReviewsResponse>("/api/reviews");
 
   //Refetch user info to update avatar URL
-  useUser();
+  // useUser();
 
   return (
     <Layout title="My Profile" hasTabBar seoTitle="Profile">
@@ -161,3 +163,35 @@ export default function Profile({ user }: UserProp) {
     </Layout>
   );
 }
+
+const Page: NextPage<{ profile: User }> = ({ profile }) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          "/api/users/me": {
+            ok: true,
+            profile,
+          },
+        },
+      }}
+    >
+      <Profile user={profile} />
+    </SWRConfig>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = withSsrSession(
+  async function ({ req }: NextPageContext) {
+    const profile = await client.user.findUnique({
+      where: {
+        id: req?.session.user?.id,
+      },
+    });
+    return {
+      props: { profile: JSON.parse(JSON.stringify(profile)) },
+    };
+  }
+);
+
+export default Page;

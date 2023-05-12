@@ -6,6 +6,7 @@ Code Challenge:
 - useSWR for list of chatrooms
 - Reserve item button
 - Reserve the item for future date -> after date passes, button to leave review
+- Leave review for seller -> profile page and product -> product page
 
 General:
 

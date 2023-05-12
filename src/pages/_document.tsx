@@ -2,7 +2,6 @@ import Document, { Head, Html, Main, NextScript } from "next/document";
 
 class CustomDocument extends Document {
   render(): JSX.Element {
-    console.log("Document is running");
     return (
       <Html>
         <Head>
