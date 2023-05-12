@@ -7,8 +7,8 @@ import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import useSWR, { SWRConfig, unstable_serialize } from "swr";
-import useSWRInfinite from "swr/infinite";
+import useSWR, { SWRConfig } from "swr";
+import useSWRInfinite, { unstable_serialize } from "swr/infinite";
 import client from "@/libs/server/client";
 
 export interface ProductWithCount extends Product {
@@ -103,7 +103,7 @@ const getKey = (pageIndex: number, previousPageData: ProductsResponse) => {
   return `/api/products?page=${page}`;
 };
 
-const Page: NextPage<ProductsResponse> = ({ products, totalPage }) => {
+const homePage: NextPage<ProductsResponse> = ({ products, totalPage }) => {
   return (
     <SWRConfig
       value={{
@@ -162,4 +162,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
   };
 };
 
-export default Page;
+export default homePage;

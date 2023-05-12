@@ -1,13 +1,14 @@
+import client from "@/libs/server/client";
 import FloatButton from "@/components/floating-button";
 import Layout from "@/components/layout";
 import useCoords from "@/libs/client/useCoords";
 import useInfiniteScroll from "@/libs/client/useInfiniteScroll";
 import { Post, User } from "@prisma/client";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import useSWR from "swr";
-import useSWRInfinite from "swr/infinite";
+import useSWR, { SWRConfig } from "swr";
+import useSWRInfinite, { unstable_serialize } from "swr/infinite";
 
 interface PostWithUser extends Post {
   user: User;
@@ -24,32 +25,25 @@ interface PostsResponse {
 }
 
 const Community: NextPage = () => {
-  const { latitude, longitude } = useCoords();
+  // const { latitude, longitude } = useCoords();
+
   // const { data } = useSWR<PostsResponse>(
   //   latitude && longitude
   //     ? `/api/posts?latitude=${latitude}&longitude=${longitude}`
   //     : null
   // );
 
-  const getKey = (pageIndex: number, previousPageData: PostsResponse) => {
-    if (pageIndex === 0)
-      return `/api/posts?page=1&latitude=${latitude}&longitude=${longitude}`;
-    const page = pageIndex + 1;
-    if (page > previousPageData.totalPage) return null;
-    return `/api/posts?page=${page}&latitude=${latitude}&longitude=${longitude}`;
-  };
+  const { data, setSize } = useSWRInfinite<PostsResponse>(getKey);
+  // const [posts, setPosts] = useState<PostWithUser[]>([]);
 
-  const { data, setSize, isLoading } = useSWRInfinite<PostsResponse>(getKey);
-  const [posts, setPosts] = useState<PostWithUser[]>([]);
-
-  useEffect(() => {
-    if (data) {
-      setPosts([]);
-      data.map((obj) => {
-        setPosts((prev) => prev.concat(obj.posts));
-      });
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setPosts([]);
+  //     data.map((obj) => {
+  //       setPosts((prev) => prev.concat(obj.posts));
+  //     });
+  //   }
+  // }, [data]);
 
   const page = useInfiniteScroll();
 
@@ -59,11 +53,9 @@ const Community: NextPage = () => {
 
   return (
     <Layout title="Community" hasTabBar seoTitle="Community">
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <div className="space-y-8 px-5 py-5">
-          {posts?.map((post) => (
+      <div className="space-y-8 px-5 py-5">
+        {data?.map((items) =>
+          items.posts.map((post) => (
             <div key={post.id} className="flex flex-col items-start">
               <Link
                 className="flex w-full flex-col items-start"
@@ -118,27 +110,87 @@ const Community: NextPage = () => {
                 </div>
               </Link>
             </div>
-          ))}
-          <FloatButton href="/community/write">
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-              ></path>
-            </svg>
-          </FloatButton>
-        </div>
-      )}
+          ))
+        )}
+        <FloatButton href="/community/write">
+          <svg
+            className="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+            ></path>
+          </svg>
+        </FloatButton>
+      </div>
     </Layout>
   );
 };
 
-export default Community;
+const communityPage: NextPage<PostsResponse> = ({ posts, totalPage }) => {
+  return (
+    <SWRConfig
+      value={{
+        fallback: {
+          [unstable_serialize(getKey)]: [{ ok: true, posts, totalPage }],
+        },
+      }}
+    >
+      <Community />
+    </SWRConfig>
+  );
+};
+
+const getKey = (pageIndex: number, previousPageData: PostsResponse) => {
+  if (pageIndex === 0) return `/api/posts?page=1`;
+  const page = pageIndex + 1;
+  if (page > previousPageData.totalPage) return null;
+  return `/api/posts?page=${page}`;
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const posts = await client.post.findMany({
+    take: 10,
+    skip: 0,
+    orderBy: [
+      {
+        createdAt: "desc",
+      },
+      {
+        id: "desc",
+      },
+    ],
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+        },
+      },
+      _count: {
+        select: {
+          interests: true,
+          answers: true,
+        },
+      },
+    },
+  });
+  const postCount = await client.post.count();
+
+  return {
+    props: {
+      ok: true,
+      posts: JSON.parse(JSON.stringify(posts)),
+      totalPage: Math.ceil(postCount / 10),
+    },
+  };
+};
+
+export default communityPage;
