@@ -3,7 +3,7 @@ import useSWR from "swr";
 import { useEffect } from "react";
 import { User } from "@prisma/client";
 
-interface ProfileResponse {
+export interface ProfileResponse {
   ok: boolean;
   profile: User;
 }

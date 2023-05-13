@@ -41,7 +41,7 @@ export const getStaticProps: GetStaticProps = async () => {
   });
 
   return {
-    props: { posts: blogPosts },
+    props: { posts: blogPosts.reverse() },
   };
 };
 

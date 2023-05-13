@@ -19,8 +19,13 @@ export default function Layout({
   seoTitle,
 }: LayoutProps) {
   const router = useRouter();
+  let parentPath = router.pathname.split("/").slice(0, -1).join("/");
+  if (parentPath.includes("product")) {
+    parentPath = "/";
+  }
+
   const goBack = () => {
-    router.back();
+    router.push(parentPath);
   };
 
   const headText = `${seoTitle} | Carrot Market`;

@@ -20,7 +20,13 @@ interface WriteResponse {
 
 const Write: NextPage = () => {
   const { latitude, longitude } = useCoords();
-  const { register, handleSubmit } = useForm<WriteForm>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<WriteForm>({
+    mode: "onSubmit",
+  });
   const [post, { loading, data }] = useMutation<WriteResponse>(`/api/posts`);
   const router = useRouter();
 
@@ -39,10 +45,18 @@ const Write: NextPage = () => {
     <Layout title="Post Your Question" canGoBack seoTitle="Post Question">
       <form onSubmit={handleSubmit(onValid)} className="space-y-4 px-4 py-10">
         <TextArea
-          register={register("question", { required: true, minLength: 5 })}
+          register={register("question", {
+            required: true,
+            minLength: {
+              message: "Question must be more than 5 letters.",
+              value: 5,
+            },
+          })}
           required
           placeholder="Ask a question!"
         />
+
+        <span className="text-sm text-red-500">{errors.question?.message}</span>
         <Button loading={loading} text="Post" />
       </form>
     </Layout>

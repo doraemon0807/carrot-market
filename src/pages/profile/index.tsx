@@ -1,7 +1,7 @@
 import { UserProp } from "@/components/auth";
 import Avatar from "@/components/avatar";
 import Layout from "@/components/layout";
-import useUser from "@/libs/client/useUser";
+import useUser, { ProfileResponse } from "@/libs/client/useUser";
 import { cls } from "@/libs/client/utils";
 import { withSsrSession } from "@/libs/server/withSession";
 import { Kind, Record, Review, User } from "@prisma/client";
@@ -9,6 +9,7 @@ import type { GetServerSideProps, NextPage, NextPageContext } from "next";
 import Link from "next/link";
 import useSWR, { SWRConfig } from "swr";
 import client from "@/libs/server/client";
+import { Suspense, useEffect, useState } from "react";
 
 interface ReviewWithUser extends Review {
   createdBy: User;
@@ -25,7 +26,79 @@ interface ReviewsResponse {
 //   kind: Kind;
 // }
 
-export function Profile({ user }: UserProp) {
+const Reviews = () => {
+  // const { data: reviewData } = useSWR<ReviewsResponse>("/api/reviews");
+  const [url, setUrl] = useState("");
+  useEffect(() => {
+    setUrl("/api/reviews");
+  }, []);
+  const { data: reviewData } = useSWR<ReviewsResponse>(url);
+
+  return (
+    <>
+      {reviewData?.reviews.map((review) => (
+        <div key={review.id}>
+          <div className="flex items-center space-x-4">
+            <Avatar
+              id={review?.createdBy?.id + ""}
+              imgId={review?.createdBy?.avatar}
+            />
+            <div>
+              <h4 className="pl-[2px] text-sm font-medium text-gray-900">
+                {review?.createdBy.name}
+              </h4>
+              <div className="flex items-center">
+                {[...Array(5)].map((_, i) => (
+                  <svg
+                    key={i}
+                    className={cls(
+                      "h-5 w-5",
+                      review.score > i ? "text-yellow-400" : "text-gray-300"
+                    )}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 text-sm text-gray-600">
+            <p>{review?.review}</p>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
+
+const Miniprofile = () => {
+  const [url, setUrl] = useState("");
+  useEffect(() => {
+    setUrl("/api/users/me");
+  }, []);
+  const { data, error } = useSWR<ProfileResponse>(url);
+  return (
+    <div className="flex items-center space-x-3">
+      <Avatar
+        id={String(data?.profile?.id)}
+        size="large"
+        imgId={data?.profile?.avatar || null}
+      />
+      <div className="flex flex-col">
+        <span className="font-medium text-gray-900">{data?.profile?.name}</span>
+        <Link href="/profile/edit">
+          <span className="text-sm text-gray-500">Edit profile &rarr;</span>
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export function Profile() {
   // const { data: salesData } = useSWR<RecordResponse>(
   //   `/api/users/me/records?kind=Sale`
   // );
@@ -36,23 +109,15 @@ export function Profile({ user }: UserProp) {
   //   `/api/users/me/records?kind=Favorite`
   // );
 
-  const { data: reviewData } = useSWR<ReviewsResponse>("/api/reviews");
-
   //Refetch user info to update avatar URL
   // useUser();
 
   return (
     <Layout title="My Profile" hasTabBar seoTitle="Profile">
       <div className="px-4 py-5">
-        <div className="flex items-center space-x-3">
-          <Avatar id={String(user?.id)} size="large" imgId={user?.avatar} />
-          <div className="flex flex-col">
-            <span className="font-medium text-gray-900">{user?.name}</span>
-            <Link href="/profile/edit">
-              <span className="text-sm text-gray-500">Edit profile &rarr;</span>
-            </Link>
-          </div>
-        </div>
+        <Suspense fallback="Loading mini profile...">
+          <Miniprofile />
+        </Suspense>
         <div className="mt-10 flex justify-around">
           <div className="flex flex-col items-center">
             <Link href="/profile/sold">
@@ -123,75 +188,38 @@ export function Profile({ user }: UserProp) {
           </div>
         </div>
         <div className="mt-12">
-          {reviewData?.reviews.map((review) => (
-            <div key={review.id}>
-              <div className="flex items-center space-x-4">
-                <Avatar
-                  id={review?.createdBy?.id + ""}
-                  imgId={review?.createdBy?.avatar}
-                />
-                <div>
-                  <h4 className="pl-[2px] text-sm font-medium text-gray-900">
-                    {review?.createdBy.name}
-                  </h4>
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <svg
-                        key={i}
-                        className={cls(
-                          "h-5 w-5",
-                          review.score > i ? "text-yellow-400" : "text-gray-300"
-                        )}
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 text-sm text-gray-600">
-                <p>{review?.review}</p>
-              </div>
-            </div>
-          ))}
+          <Suspense fallback="Loading reviews...">
+            <Reviews />
+          </Suspense>
         </div>
       </div>
     </Layout>
   );
 }
 
-const Page: NextPage<{ profile: User }> = ({ profile }) => {
+const profilePage: NextPage = () => {
   return (
     <SWRConfig
       value={{
-        fallback: {
-          "/api/users/me": {
-            ok: true,
-            profile,
-          },
-        },
+        suspense: true,
       }}
     >
-      <Profile user={profile} />
+      <Profile />
     </SWRConfig>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withSsrSession(
-  async function ({ req }: NextPageContext) {
-    const profile = await client.user.findUnique({
-      where: {
-        id: req?.session.user?.id,
-      },
-    });
-    return {
-      props: { profile: JSON.parse(JSON.stringify(profile)) },
-    };
-  }
-);
+// export const getServerSideProps: GetServerSideProps = withSsrSession(
+//   async function ({ req }: NextPageContext) {
+//     const profile = await client.user.findUnique({
+//       where: {
+//         id: req?.session.user?.id,
+//       },
+//     });
+//     return {
+//       props: { profile: JSON.parse(JSON.stringify(profile)) },
+//     };
+//   }
+// );
 
-export default Page;
+export default profilePage;

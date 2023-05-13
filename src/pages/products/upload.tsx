@@ -5,6 +5,7 @@ import TextArea from "@/components/textarea";
 import useMutation from "@/libs/client/useMutation";
 import { Product } from "@prisma/client";
 import type { NextPage } from "next";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -80,7 +81,7 @@ const Upload: NextPage = () => {
       <form className="space-y-4 px-4" onSubmit={handleSubmit(onValid)}>
         <div>
           {photoPreview ? (
-            <img src={photoPreview} className="h-46 w-full" />
+            <Image alt="" src={photoPreview} className="h-46 w-full" />
           ) : (
             <label className="flex h-48 w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-300 text-gray-600 hover:border-orange-500 hover:text-orange-500">
               <svg

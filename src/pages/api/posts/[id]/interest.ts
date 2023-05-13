@@ -37,6 +37,8 @@ async function handler(
     },
   });
 
+  const isInterested = Boolean(alreadyExists);
+
   if (alreadyExists) {
     await client.interest.delete({
       where: {
@@ -60,8 +62,11 @@ async function handler(
     });
   }
 
+  res.revalidate(`/community/${id}`);
+
   res.json({
     ok: true,
+    isInterested,
   });
 }
 

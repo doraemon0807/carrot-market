@@ -4,8 +4,6 @@ import Layout from "@/components/layout";
 import useInfiniteScroll from "@/libs/client/useInfiniteScroll";
 import { Product } from "@prisma/client";
 import type { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import useSWR, { SWRConfig } from "swr";
 import useSWRInfinite, { unstable_serialize } from "swr/infinite";
