@@ -16,9 +16,6 @@ async function handler(
     });
 
     if (!profile) {
-      console.log(req.cookies);
-      console.log(res.cookies);
-      // res.cookies.set("carrotmarket", "", { maxAge: -1 });
       return res.json({ ok: false });
     }
     res.json({
