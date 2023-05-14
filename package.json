@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@emailjs/nodejs": "^2.2.0",
-    "@prisma/client": "^4.13.0",
+    "@prisma/client": "^4.14.0",
     "@sendgrid/mail": "^7.7.0",
     "@tailwindcss/forms": "^0.5.3",
     "@types/node": "18.15.11",
