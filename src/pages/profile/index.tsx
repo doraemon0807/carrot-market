@@ -32,7 +32,9 @@ const Reviews = () => {
   useEffect(() => {
     setUrl("/api/reviews");
   }, []);
-  const { data: reviewData } = useSWR<ReviewsResponse>(url);
+  const { data: reviewData } = useSWR<ReviewsResponse>(
+    typeof window === "undefined" ? null : url
+  );
 
   return (
     <>
@@ -80,7 +82,9 @@ const Miniprofile = () => {
   useEffect(() => {
     setUrl("/api/users/me");
   }, []);
-  const { data, error } = useSWR<ProfileResponse>(url);
+  const { data, error } = useSWR<ProfileResponse>(
+    typeof window === "undefined" ? null : url
+  );
   return (
     <div className="flex items-center space-x-3">
       <Avatar
