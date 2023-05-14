@@ -7,13 +7,20 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
   if (req.method === "GET") {
     const profile = await client.user.findUnique({
       where: {
         id: req.session.user?.id,
       },
     });
+
+    if (!profile) {
+      console.log(req.cookies);
+      console.log(res.cookies);
+      // res.cookies.set("carrotmarket", "", { maxAge: -1 });
+      return res.json({ ok: false });
+    }
     res.json({
       ok: true,
       profile,

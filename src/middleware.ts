@@ -4,6 +4,7 @@ import {
   NextResponse,
   userAgent,
 } from "next/server";
+import useUser from "@/libs/client/useUser";
 
 export const config = {
   matcher: ["/((?!api|_next/static|favicon.ico).*)"],

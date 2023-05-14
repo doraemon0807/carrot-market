@@ -13,11 +13,11 @@ datasource db {
 }
 
 model User {
-  id              Int        @id @default(autoincrement())
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  phone           String?    @unique
-  email           String?    @unique
+  id              Int           @id @default(autoincrement())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  phone           String?       @unique
+  email           String?       @unique
   name            String
   avatar          String?
   tokens          Token[]
@@ -25,14 +25,17 @@ model User {
   posts           Post[]
   answers         Answer[]
   interests       Interest[]
-  writtenReviews  Review[]   @relation(name: "writtenReviews")
-  receivedReviews Review[]   @relation(name: "receivedReviews")
+  writtenReviews  Review[]      @relation(name: "writtenReviews")
+  receivedReviews Review[]      @relation(name: "receivedReviews")
   // favorite        Favorite[]
   // sales           Sale[]
   // purchases       Purchase[]
   records         Record[]
   stream          Stream[]
   messages        Message[]
+  sellerChat      ChatRoom[]    @relation(name: "sellerChat")
+  buyerChat       ChatRoom[]    @relation(name: "buyerChat")
+  ChatMessage     ChatMessage[]
 }
 
 model Token {
@@ -211,4 +214,31 @@ model Message {
 
   @@index([userId])
   @@index([streamId])
+}
+
+model ChatRoom {
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  seller      User          @relation(name: "sellerChat", fields: [sellerId], references: [id], onDelete: Cascade)
+  sellerId    Int
+  buyer       User          @relation(name: "buyerChat", fields: [buyerId], references: [id], onDelete: Cascade)
+  buyerId     Int
+  chatMessage ChatMessage[]
+
+  @@index([sellerId])
+  @@index([buyerId])
+}
+
+model ChatMessage {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
+  chatRoomId Int
+
+  @@index([userId])
+  @@index([chatRoomId])
 }
