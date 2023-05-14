@@ -23,10 +23,10 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
   //check if user is logged in or not, then redirect to enter or home
   if (!req.url.includes("/api")) {
     if (!req.url.includes("/enter") && !req.cookies.has("carrotsession")) {
-      return NextResponse.redirect(`${req.nextUrl.origin}/enter`);
+      return NextResponse.redirect(new URL("/enter", req.url));
     }
     if (req.url.includes("/enter") && req.cookies.has("carrotsession")) {
-      return NextResponse.redirect(`${req.nextUrl.origin}/`);
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 }
