@@ -62,7 +62,7 @@ async function handler(
     });
   }
 
-  res.revalidate(`/community/${id}`);
+  // res.revalidate(`/community/${id}`);
 
   res.json({
     ok: true,

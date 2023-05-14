@@ -44,7 +44,7 @@ async function handler(
     },
   });
 
-  await res.revalidate(`/community/${cleanId}`);
+  // await res.revalidate(`/community/${cleanId}`);
 
   res.json({
     ok: true,
